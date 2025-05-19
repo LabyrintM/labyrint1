@@ -1,1 +1,117 @@
-test
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Labyrinten</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fff;
+      color: #333;
+    }
+    #map img {
+      max-width: 100%;
+      height: auto;
+    }
+    #instructions, #riddleSection, #roomContent {
+      margin-top: 20px;
+    }
+    #responseText {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input[type="text"] {
+      padding: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 6px 12px;
+      font-size: 16px;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Välkommen, Micke.</h1>
+  <p>Det här är början på något. Skriv in kodordet för att öppna nästa steg.</p>
+  
+  <form onsubmit="checkCode(event)">
+    <input type="text" id="codeInput" autocomplete="off" />
+    <button type="submit">Öppna</button>
+  </form>
+  
+  <p id="responseText"></p>
+  
+  <div id="map" style="display:none;">
+    <img src="https://i.ibb.co/kKXnRGj/LABYRINTEN-22.jpg" alt="Skattkarta Labyrinten" />
+  </div>
+  
+  <div id="instructions" style="display:none;">
+    <p>Det är rätt. Du har nu låst upp instruktionerna...</p>
+    <p>Skriv ett rumsnamn – så ger jag dig en gåta.</p>
+    <input type="text" id="roomInput" autocomplete="off" />
+    <button onclick="getRiddle()">Sök rum</button>
+  </div>
+  
+  <div id="riddleSection"></div>
+  <div id="roomContent"></div>
+  
+  <script>
+    const correctCode = "Mario";
+    
+    const riddles = {
+      "Historia": "Vad skrev du i ett sällskapsspel när du inte fick ordet?",
+      "Pippi": "Vilket djur förknippar du med mig?",
+      "Min kompis": "Vad är det första du tänker på när du hör mitt namn?",
+      "Orimligheten": "Vilken färg hade bilen i gåtan?",
+      "Viggo/Alva": "Vad heter Mickes dotter?",
+      "Kärleken": "Vad var namnet på den låt som spelades under första mötet?",
+      "Musikens tidslinje": "Vilken musikstil föredrar jag?",
+      "Min Micke": "Vilken grej som Johanna serverat tyckte du va godast?",
+      "Framtiden": "Vilket är vårt drömresmål tillsammans?",
+      "Möjligheternas rum": "Vad betyder vår relation för dig?",
+      "Spegling": "Vad ser du i mig när du speglar dig?"
+    };
+    
+    function checkCode(event) {
+      event.preventDefault();
+      const input = document.getElementById("codeInput").value.trim();
+      const responseText = document.getElementById("responseText");
+      if (input === correctCode) {
+        responseText.textContent = "Korrekt! Här är skattkartan och instruktionerna.";
+        document.getElementById("map").style.display = "block";
+        document.getElementById("instructions").style.display = "block";
+      } else {
+        responseText.textContent = "Fel kodord, försök igen.";
+      }
+    }
+    
+    function getRiddle() {
+      const roomName = document.getElementById("roomInput").value.trim();
+      const riddleSection = document.getElementById("riddleSection");
+      const roomContent = document.getElementById("roomContent");
+      if (riddles[roomName]) {
+        riddleSection.innerHTML = `<p>Gåta för rum ${roomName}: ${riddles[roomName]}</p>`;
+        roomContent.innerHTML = `<p>Skriv ditt svar här:</p><input type="text" id="answerInput" autocomplete="off" />
+          <button onclick="checkAnswer('${roomName}')">Skicka svar</button>`;
+      } else {
+        riddleSection.innerHTML = `<p>Rum inte hittat. Kontrollera stavningen.</p>`;
+        roomContent.innerHTML = "";
+      }
+    }
+    
+    function checkAnswer(roomName) {
+      const answerInput = document.getElementById("answerInput").value.trim().toLowerCase();
+      const riddleSection = document.getElementById("riddleSection");
+      const roomContent = document.getElementById("roomContent");
+      
+      // Här kan du lägga in rätt svar per rum om du vill (för test ex "gul bil" för Orimligheten)
+      // För nu visar vi bara en generisk bekräftelse
+      riddleSection.innerHTML = `<p>Ditt svar på gåtan i rum ${roomName} mottaget: <b>${answerInput}</b></p>`;
+      roomContent.innerHTML = `<p>Här kommer innehållet för rummet ${roomName} att visas.</p>`;
+    }
+  </script>
+</body>
+</html>
